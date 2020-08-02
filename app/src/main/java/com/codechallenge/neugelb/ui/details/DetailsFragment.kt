@@ -15,6 +15,7 @@ import kotlinx.android.synthetic.main.details_fragment.*
 @AndroidEntryPoint
 class DetailsFragment : Fragment(R.layout.details_fragment) {
     private val imagesDomain = "https://image.tmdb.org/t/p/w500"
+    lateinit var imageLoader: ImageLoader
 
     //Poster, Title, Description and Rating
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -28,13 +29,13 @@ class DetailsFragment : Fragment(R.layout.details_fragment) {
         if (imageUrl.isNotEmpty()) {
             imageUrl = imagesDomain + imageUrl
         }
-        val imageLoader = ImageLoader(view.context)
+        imageLoader = ImageLoader(view.context)
         val request = LoadRequest.Builder(view.context)
             .data(imageUrl)
             .target { drawable ->
                 poster_iv.load(drawable)
             }
-            .listener(object: Request.Listener {
+            .listener(object : Request.Listener {
 
                 override fun onError(request: Request, throwable: Throwable) {
                     super.onError(request, throwable)
@@ -55,5 +56,10 @@ class DetailsFragment : Fragment(R.layout.details_fragment) {
         //here I divided to 2 to avoid issue on android 7.0
         //https://issuetracker.google.com/issues/37114040
         ratingBar.rating = rating / 2
+    }
+
+    override fun onDetach() {
+        super.onDetach()
+        imageLoader.shutdown()
     }
 }

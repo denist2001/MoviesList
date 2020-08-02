@@ -74,7 +74,7 @@ class MainFragment : Fragment(R.layout.main_fragment), LifecycleOwner {
     }
 
     private fun showNextMovies(presentations: List<ShortPresentations>) {
-        mainAdapter.addPresentations(presentations)
+        mainAdapter.submitList(presentations)
     }
 
     private fun showLoading(isVisible: Boolean) {

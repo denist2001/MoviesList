@@ -7,19 +7,18 @@ import android.widget.ImageView
 import android.widget.RatingBar
 import android.widget.TextView
 import androidx.navigation.findNavController
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import coil.api.load
 import coil.size.Scale
 import coil.transform.RoundedCornersTransformation
 import com.codechallenge.neugelb.R
 import javax.inject.Inject
-import javax.inject.Singleton
 
-@Singleton
-class MainAdapter @Inject constructor() : RecyclerView.Adapter<MainAdapter.MainViewHolder>() {
+class MainAdapter @Inject constructor() : ListAdapter<ShortPresentations, MainAdapter.MainViewHolder>(DiffCallback()) {
 
     private lateinit var loadNextMovies: () -> Unit
-    private val presentationItems = ArrayList<ShortPresentations>()
     private val imagesDomain = "https://image.tmdb.org/t/p/w200"
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MainViewHolder {
@@ -28,13 +27,9 @@ class MainAdapter @Inject constructor() : RecyclerView.Adapter<MainAdapter.MainV
         return MainViewHolder(view)
     }
 
-    override fun getItemCount(): Int {
-        return presentationItems.size
-    }
-
     override fun onBindViewHolder(holder: MainViewHolder, position: Int) {
         holder.itemView.setOnClickListener { clickedView ->
-            val presentation = presentationItems[position]
+            val presentation = currentList[position] //presentationItems[position]
             val action = MainFragmentDirections.actionShowSelectedMovie(
                 title = presentation.title,
                 imageUrl = presentation.imageUrl,
@@ -43,7 +38,7 @@ class MainAdapter @Inject constructor() : RecyclerView.Adapter<MainAdapter.MainV
             )
             clickedView.findNavController().navigate(action)
         }
-        val presentation = presentationItems[position]
+        val presentation = currentList[position] //presentationItems[position]
         holder.title.text = presentation.title
         holder.description.text = presentation.description
         //here I divided to 2 to avoid issue on android 7.0
@@ -54,21 +49,13 @@ class MainAdapter @Inject constructor() : RecyclerView.Adapter<MainAdapter.MainV
             placeholder(R.drawable.ic_baseline_local_movies_24)
             transformations(RoundedCornersTransformation(8F))
         }
-        if (position == presentationItems.size - 10) {
+        if (position == currentList.size - 10) {
             loadNextMovies()
         }
     }
 
-    fun addPresentations(presentations: List<ShortPresentations>) {
-        if (presentationItems.containsAll(presentations)) return
-        val startPosition = presentationItems.size
-        presentationItems.addAll(presentations)
-        val itemsCount = presentations.size
-        notifyItemRangeInserted(startPosition, itemsCount)
-    }
-
     fun cleanPresentationsList() {
-        presentationItems.clear()
+        currentList.clear()
         notifyDataSetChanged()
     }
 
@@ -81,5 +68,21 @@ class MainAdapter @Inject constructor() : RecyclerView.Adapter<MainAdapter.MainV
         val title: TextView = itemView.findViewById(R.id.title_tv)
         val ratingBar: RatingBar = itemView.findViewById(R.id.ratingBar)
         val description: TextView = itemView.findViewById(R.id.description_tv)
+    }
+}
+
+class DiffCallback : DiffUtil.ItemCallback<ShortPresentations>() {
+    override fun areItemsTheSame(
+        oldItem: ShortPresentations,
+        newItem: ShortPresentations
+    ): Boolean {
+        return oldItem.id == newItem.id
+    }
+
+    override fun areContentsTheSame(
+        oldItem: ShortPresentations,
+        newItem: ShortPresentations
+    ): Boolean {
+        return oldItem == newItem
     }
 }

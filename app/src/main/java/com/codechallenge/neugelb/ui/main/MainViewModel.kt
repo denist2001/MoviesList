@@ -15,6 +15,7 @@ class MainViewModel @ViewModelInject constructor(
 ) : ViewModel() {
 
     val state = MutableLiveData<MainViewModelState>()
+    val shortRepresentations: ArrayList<ShortPresentations> = ArrayList()
     var loadingPage: Int = 1
     var searchingPage: Int = 1
     var previousSearch = ""
@@ -50,9 +51,9 @@ class MainViewModel @ViewModelInject constructor(
 
         override fun onResponse(call: Call<Response>, response: retrofit2.Response<Response>) {
             if (response.isSuccessful && response.body() != null) {
-                val presentations: List<ShortPresentations> =
-                    converter.transform(response.body()?.results)
-                state.postValue(MainViewModelState.RequestResult(presentations))
+                shortRepresentations.addAll(
+                    converter.transform(response.body()?.results))
+                state.postValue(MainViewModelState.RequestResult(shortRepresentations))
             } else {
                 state.postValue(MainViewModelState.Error("Server side error"))
             }

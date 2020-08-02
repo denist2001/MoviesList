@@ -16,7 +16,7 @@ android {
         versionCode 1
         versionName "1.0"
 
-        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner "com.codechallenge.neugelb.NeuGelbTestRunner"
     }
 
     buildTypes {
@@ -65,10 +65,20 @@ dependencies {
     implementation "com.squareup.retrofit2:retrofit:$retrofit_version"
     implementation "com.squareup.retrofit2:converter-gson:$retrofit_version"
     implementation "com.github.akarnokd:rxjava3-retrofit-adapter:3.0.0"
+    //correct instantiating of MockWebServer
+    implementation "com.squareup.okhttp3:logging-interceptor:$mockwebserver_version"
 
     testImplementation 'junit:junit:4.13'
 
     androidTestImplementation 'androidx.test.ext:junit:1.1.1'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
+    androidTestImplementation 'org.awaitility:awaitility-kotlin:3.1.1'
+    //grant permissions rule
+    androidTestImplementation 'androidx.test:rules:1.2.0'
+    //dependency injection test tool
+    androidTestImplementation  "com.google.dagger:hilt-android-testing:$hilt_version"
+    kaptAndroidTest "com.google.dagger:hilt-android-compiler:$hilt_version"
+    //network mock
+    androidTestImplementation "com.squareup.okhttp3:mockwebserver:$mockwebserver_version"
 
 }
