@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/mainFragment" >
+
+    <fragment
+        android:id="@+id/mainFragment"
+        android:name="com.codechallenge.neugelb.ui.main.MainFragment"
+        android:label="Movies"
+        tools:layout="@layout/main_fragment">
+        <action
+            android:id="@+id/action_show_selected_movie"
+            app:destination="@id/details_fragment"
+            app:enterAnim="@android:anim/fade_in"
+            app:exitAnim="@android:anim/fade_out" />
+        <argument
+            android:name="search_query"
+            app:argType="string" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/details_fragment"
+        android:name="com.codechallenge.neugelb.ui.details.DetailsFragment"
+        android:label="About"
+        tools:layout="@layout/details_fragment">
+        <argument
+            android:name="title"
+            app:argType="string"
+            app:nullable="true" />
+        <argument
+            android:name="image_url"
+            app:argType="string"
+            app:nullable="true" />
+        <argument
+            android:name="description"
+            app:argType="string"
+            app:nullable="true" />
+        <argument
+            android:name="rating"
+            app:argType="float"
+            android:defaultValue="0.0" />
+    </fragment>
+
+
+</navigation>
