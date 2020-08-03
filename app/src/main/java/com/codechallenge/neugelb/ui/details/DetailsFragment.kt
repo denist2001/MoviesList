@@ -8,13 +8,14 @@ import coil.api.load
 import coil.decode.DataSource
 import coil.request.LoadRequest
 import coil.request.Request
+import com.codechallenge.neugelb.BuildConfig
 import com.codechallenge.neugelb.R
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.details_fragment.*
 
 @AndroidEntryPoint
 class DetailsFragment : Fragment(R.layout.details_fragment) {
-    private val imagesDomain = "https://image.tmdb.org/t/p/w500"
+    private val imagesDomain = BuildConfig.LARGE_IMAGES_DOMAIN
     lateinit var imageLoader: ImageLoader
 
     //Poster, Title, Description and Rating

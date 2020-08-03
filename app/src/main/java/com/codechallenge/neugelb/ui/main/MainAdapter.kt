@@ -13,13 +13,14 @@ import androidx.recyclerview.widget.RecyclerView
 import coil.api.load
 import coil.size.Scale
 import coil.transform.RoundedCornersTransformation
+import com.codechallenge.neugelb.BuildConfig
 import com.codechallenge.neugelb.R
 import javax.inject.Inject
 
 class MainAdapter @Inject constructor() : ListAdapter<ShortPresentations, MainAdapter.MainViewHolder>(DiffCallback()) {
 
     private lateinit var loadNextMovies: () -> Unit
-    private val imagesDomain = "https://image.tmdb.org/t/p/w200"
+    private val imagesDomain = BuildConfig.SMALL_IMAGES_DOMAIN
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MainViewHolder {
         val view =

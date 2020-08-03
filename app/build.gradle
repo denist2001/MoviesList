@@ -22,11 +22,15 @@ android {
     buildTypes {
         debug {
             buildConfigField "String", "API_KEY", "\"f59338cd40961fb3fba86095332969e1\""
+            buildConfigField "String", "SMALL_IMAGES_DOMAIN", "\"https://image.tmdb.org/t/p/w200\""
+            buildConfigField "String", "LARGE_IMAGES_DOMAIN", "\"https://image.tmdb.org/t/p/w500\""
         }
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
             buildConfigField "String", "API_KEY", "\"f59338cd40961fb3fba86095332969e1\""
+            buildConfigField "String", "SMALL_IMAGES_DOMAIN", "\"https://image.tmdb.org/t/p/w200\""
+            buildConfigField "String", "LARGE_IMAGES_DOMAIN", "\"https://image.tmdb.org/t/p/w500\""
         }
     }
     compileOptions {
