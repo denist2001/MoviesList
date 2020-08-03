@@ -22,20 +22,20 @@ class MainModule {
 
     @Provides
     @Singleton
-    fun provideGson() = GsonBuilder()
+    fun provideGson(): Gson = GsonBuilder()
         .setLenient()
         .create()
 
     @Provides
     @Singleton
-    fun provideRetrofit(gson: Gson, url: String) = Retrofit.Builder()
+    fun provideRetrofit(gson: Gson, url: String): Retrofit = Retrofit.Builder()
         .baseUrl(url)
         .addConverterFactory(GsonConverterFactory.create(gson))
         .build()
 
     @Provides
     @Singleton
-    fun provideRepositoryService(retrofit: Retrofit) = retrofit.create(RepositoryService::class.java)
+    fun provideRepositoryService(retrofit: Retrofit): RepositoryService = retrofit.create(RepositoryService::class.java)
 
     @Provides
     @Singleton

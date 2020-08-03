@@ -15,17 +15,4 @@ data class Result(
     val vote_count: Int?,
     val video: Boolean?,
     val vote_average: Float?
-) {
-    override fun equals(other: Any?): Boolean {
-        if (this === other) return true
-        if (other !is Result) return false
-
-        if (id != other.id) return false
-
-        return true
-    }
-
-    override fun hashCode(): Int {
-        return id ?: 0
-    }
-}
+)
