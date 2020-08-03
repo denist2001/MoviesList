@@ -8,6 +8,8 @@ buildscript {
     ext.coil_version = "0.11.0"
     ext.retrofit_version = "2.9.0"
     ext.mockwebserver_version = "4.8.0"
+    ext.mockito_version = "3.3.3"
+    ext.espresso_version = "3.2.0"
     repositories {
         google()
         jcenter()
