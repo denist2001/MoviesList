@@ -4,7 +4,9 @@ import com.codechallenge.neugelb.data.Result
 import com.codechallenge.neugelb.ui.main.ShortPresentations
 import java.util.*
 import javax.inject.Inject
+import javax.inject.Singleton
 
+@Singleton
 class ResultConverter @Inject constructor(){
 
     fun transform(results: List<Result>?): List<ShortPresentations> {
