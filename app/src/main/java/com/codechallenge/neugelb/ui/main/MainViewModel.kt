@@ -43,7 +43,7 @@ class MainViewModel @ViewModelInject constructor(
     val dataCallback = object : Callback<Response> {
         override fun onFailure(call: Call<Response>, t: Throwable) {
             if (!t.message.isNullOrEmpty()) {
-                state.postValue(MainViewModelState.Error(t.message!!))
+                t.message?.let { state.postValue(MainViewModelState.Error(it)) }
                 return
             }
             state.postValue(MainViewModelState.Error("Communication issue"))

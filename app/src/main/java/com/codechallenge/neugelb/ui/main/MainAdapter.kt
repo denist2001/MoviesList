@@ -35,7 +35,7 @@ class MainAdapter @Inject constructor() : ListAdapter<ShortPresentations, MainAd
                 title = presentation.title,
                 imageUrl = presentation.imageUrl,
                 description = presentation.description,
-                rating = presentation.rating!!
+                rating = presentation.rating?.let { it } ?: 0.0F
             )
             clickedView.findNavController().navigate(action)
         }
@@ -44,7 +44,7 @@ class MainAdapter @Inject constructor() : ListAdapter<ShortPresentations, MainAd
         holder.description.text = presentation.description
         //here I divided to 2 to avoid issue on android 7.0
         //https://issuetracker.google.com/issues/37114040
-        holder.ratingBar.rating = presentation.rating!! / 2
+        holder.ratingBar.rating = presentation.rating?.let { it / 2 } ?: 0.0F
         holder.posterView.load(imagesDomain + presentation.imageUrl) {
             scale(Scale.FIT)
             placeholder(R.drawable.ic_baseline_local_movies_24)

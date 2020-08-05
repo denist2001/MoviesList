@@ -56,8 +56,12 @@ class MainFragment : Fragment(R.layout.main_fragment), LifecycleOwner {
         val searchQuery = requireArguments().getString(searchQueryField, "")
         //probably, it's better to move this 'if' to viewModel, but looks like it's more clear here
         if (searchQuery.isNotEmpty()) {
-            if (!searchQuery!!.contentEquals(viewModel.previousSearch)) mainAdapter.cleanPresentationsList()
-            if (mainAdapter.itemCount == 0) viewModel.onAction(MainViewModelAction.StartSearching(searchQuery))
+            searchQuery?.let {
+                if (!it.contentEquals(viewModel.previousSearch)) mainAdapter.cleanPresentationsList()
+                if (mainAdapter.itemCount == 0) viewModel.onAction(
+                    MainViewModelAction.StartSearching(it)
+                )
+            }
         } else {
             if (mainAdapter.itemCount == 0) viewModel.onAction(MainViewModelAction.StartLoading)
         }
