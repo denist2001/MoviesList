@@ -7,10 +7,13 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.Observer
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.codechallenge.neugelb.R
 import dagger.hilt.android.AndroidEntryPoint
+import io.reactivex.disposables.CompositeDisposable
 import kotlinx.android.synthetic.main.main_fragment.*
+import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 
@@ -21,6 +24,7 @@ class MainFragment : Fragment(R.layout.main_fragment), LifecycleOwner {
     lateinit var mainAdapter: MainAdapter
     private val viewModel by viewModels<MainViewModel>()
     private val searchQueryField = "search_query"
+    val disposables = CompositeDisposable()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -31,6 +35,11 @@ class MainFragment : Fragment(R.layout.main_fragment), LifecycleOwner {
         mainAdapter.getNextPresentations {
             getNextMovies()
         }
+        disposables.add(mainAdapter.clickSubject
+            .throttleFirst(1, TimeUnit.SECONDS)
+            .subscribe {
+                findNavController().navigate(it)
+            })
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -50,6 +59,11 @@ class MainFragment : Fragment(R.layout.main_fragment), LifecycleOwner {
                 }
             })
         startLoadingMovies()
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        disposables.clear()
     }
 
     private fun startLoadingMovies() {

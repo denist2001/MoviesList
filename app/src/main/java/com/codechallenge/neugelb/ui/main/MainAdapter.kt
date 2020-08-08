@@ -6,6 +6,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.RatingBar
 import android.widget.TextView
+import androidx.navigation.NavDirections
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
@@ -15,9 +16,13 @@ import coil.size.Scale
 import coil.transform.RoundedCornersTransformation
 import com.codechallenge.neugelb.BuildConfig
 import com.codechallenge.neugelb.R
+import io.reactivex.subjects.PublishSubject
 import javax.inject.Inject
 
-class MainAdapter @Inject constructor() : ListAdapter<ShortPresentations, MainAdapter.MainViewHolder>(DiffCallback()) {
+class MainAdapter @Inject constructor() :
+    ListAdapter<ShortPresentations, MainAdapter.MainViewHolder>(DiffCallback()) {
+
+    val clickSubject: PublishSubject<NavDirections> = PublishSubject.create<NavDirections>()
 
     private lateinit var loadNextMovies: () -> Unit
     private val imagesDomain = BuildConfig.SMALL_IMAGES_DOMAIN
@@ -29,7 +34,7 @@ class MainAdapter @Inject constructor() : ListAdapter<ShortPresentations, MainAd
     }
 
     override fun onBindViewHolder(holder: MainViewHolder, position: Int) {
-        holder.itemView.setOnClickListener { clickedView ->
+        holder.itemView.setOnClickListener {
             val presentation = currentList[position] //presentationItems[position]
             val action = MainFragmentDirections.actionShowSelectedMovie(
                 title = presentation.title,
@@ -37,7 +42,7 @@ class MainAdapter @Inject constructor() : ListAdapter<ShortPresentations, MainAd
                 description = presentation.description,
                 rating = presentation.rating?.let { it } ?: 0.0F
             )
-            clickedView.findNavController().navigate(action)
+            clickSubject.onNext(action)
         }
         val presentation = currentList[position] //presentationItems[position]
         holder.title.text = presentation.title
@@ -60,7 +65,7 @@ class MainAdapter @Inject constructor() : ListAdapter<ShortPresentations, MainAd
         notifyDataSetChanged()
     }
 
-    fun getNextPresentations(loadNextValues: ()->Unit) {
+    fun getNextPresentations(loadNextValues: () -> Unit) {
         this.loadNextMovies = loadNextValues
     }
 
