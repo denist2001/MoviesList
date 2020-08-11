@@ -7,23 +7,25 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class ResultConverter @Inject constructor(){
+class ResultConverter @Inject constructor() {
 
     fun transform(results: List<Result>?): List<ShortPresentations> {
         if (results.isNullOrEmpty()) return emptyList()
         val presentations = ArrayList<ShortPresentations>()
         for (result in results) {
-            presentations.add(
-                ShortPresentations(
-                    id = result.id,
-                    imageUrl = result.poster_path,
-                    rating = result.vote_average,
-                    title = result.title,
-                    description = result.overview
-                )
-            )
+            presentations.add(transform(result))
         }
         return presentations
+    }
+
+    fun transform(result: Result): ShortPresentations {
+        return ShortPresentations(
+            id = result.id,
+            imageUrl = result.poster_path,
+            rating = result.vote_average,
+            title = result.title,
+            description = result.overview
+        )
     }
 
 }

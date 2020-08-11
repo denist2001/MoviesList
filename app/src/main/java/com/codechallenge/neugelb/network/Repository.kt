@@ -1,16 +1,17 @@
 package com.codechallenge.neugelb.network
 
+import androidx.paging.PagingData
 import com.codechallenge.neugelb.data.Response
-import retrofit2.Callback
+import kotlinx.coroutines.flow.Flow
 
 interface Repository {
-    fun loadNextMovies(
+
+    suspend fun loadNextMovies(
+        pageNumber: Int
+    ): Response
+
+    suspend fun searchNextMovies(
         pageNumber: Int,
-        callback: Callback<Response>
-    )
-    fun searchNextMovies(
-        pageNumber: Int,
-        query: String,
-        callback: Callback<Response>
-    )
+        query: String
+    ): Response
 }

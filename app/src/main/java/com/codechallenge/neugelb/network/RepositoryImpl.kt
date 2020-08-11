@@ -2,7 +2,6 @@ package com.codechallenge.neugelb.network
 
 import com.codechallenge.neugelb.BuildConfig
 import com.codechallenge.neugelb.data.Response
-import retrofit2.Callback
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -14,29 +13,27 @@ class RepositoryImpl @Inject constructor() : Repository {
 
     private val apiKey = BuildConfig.API_KEY
 
-    override fun loadNextMovies(
-        pageNumber: Int,
-        callback: Callback<Response>
-    ) {
+    override suspend fun loadNextMovies(
+        pageNumber: Int
+    ): Response {
         val params = HashMap<String, String>()
         params["api_key"] = apiKey
         params["page"] = pageNumber.toString()
 
-        val callResponse = networkService.loadMovies(params)
-        callResponse.enqueue(callback)
+        return networkService.loadMovies(params)
+
     }
 
-    override fun searchNextMovies(
+    override suspend fun searchNextMovies(
         pageNumber: Int,
-        query: String,
-        callback: Callback<Response>
-    ) {
+        query: String
+    ): Response {
         val params = HashMap<String, String>()
         params["api_key"] = apiKey
         params["query"] = query
         params["page"] = pageNumber.toString()
 
-        val callResponse = networkService.searchMovies(params)
-        callResponse.enqueue(callback)
+        return networkService.searchMovies(params)
+
     }
 }

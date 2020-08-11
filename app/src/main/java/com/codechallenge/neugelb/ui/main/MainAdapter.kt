@@ -8,6 +8,7 @@ import android.widget.RatingBar
 import android.widget.TextView
 import androidx.navigation.NavDirections
 import androidx.navigation.findNavController
+import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -20,11 +21,10 @@ import io.reactivex.subjects.PublishSubject
 import javax.inject.Inject
 
 class MainAdapter @Inject constructor() :
-    ListAdapter<ShortPresentations, MainAdapter.MainViewHolder>(DiffCallback()) {
+    PagingDataAdapter<ShortPresentations, MainAdapter.MainViewHolder>(DiffCallback()) {
 
     val clickSubject: PublishSubject<NavDirections> = PublishSubject.create<NavDirections>()
 
-    private lateinit var loadNextMovies: () -> Unit
     private val imagesDomain = BuildConfig.SMALL_IMAGES_DOMAIN
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MainViewHolder {
@@ -35,7 +35,8 @@ class MainAdapter @Inject constructor() :
 
     override fun onBindViewHolder(holder: MainViewHolder, position: Int) {
         holder.itemView.setOnClickListener {
-            val presentation = currentList[position] //presentationItems[position]
+            val presentation =
+                getItem(position) ?: return@setOnClickListener
             val action = MainFragmentDirections.actionShowSelectedMovie(
                 title = presentation.title,
                 imageUrl = presentation.imageUrl,
@@ -44,7 +45,7 @@ class MainAdapter @Inject constructor() :
             )
             clickSubject.onNext(action)
         }
-        val presentation = currentList[position] //presentationItems[position]
+        val presentation = getItem(position) ?: return
         holder.title.text = presentation.title
         holder.description.text = presentation.description
         //here I divided to 2 to avoid issue on android 7.0
@@ -55,18 +56,6 @@ class MainAdapter @Inject constructor() :
             placeholder(R.drawable.ic_baseline_local_movies_24)
             transformations(RoundedCornersTransformation(8F))
         }
-        if (position == currentList.size - 10) {
-            loadNextMovies()
-        }
-    }
-
-    fun cleanPresentationsList() {
-        currentList.clear()
-        notifyDataSetChanged()
-    }
-
-    fun getNextPresentations(loadNextValues: () -> Unit) {
-        this.loadNextMovies = loadNextValues
     }
 
     class MainViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
