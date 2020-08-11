@@ -21,32 +21,33 @@ class MainActivity : AppCompatActivity() {
         binding = MainActivityBinding.inflate(layoutInflater)
         setContentView(binding.root)
     }
-
-    override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        menuInflater.inflate(R.menu.search_menu, menu)
-        val searchManager =
-            getSystemService(Context.SEARCH_SERVICE) as SearchManager
-        val searchView =
-            menu.findItem(R.id.app_bar_search).actionView as SearchView
-        searchView.setSearchableInfo(searchManager.getSearchableInfo(componentName))
-
-        searchView.isIconifiedByDefault = false
-
-        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
-            override fun onQueryTextSubmit(query: String?): Boolean {
-                if (query.isNullOrEmpty()) return true
-                val navigationController = findNavController(R.id.container)
-                val bundle = Bundle()
-                bundle.putString("search_query", query)
-                navigationController.setGraph(navigationController.graph, bundle)
-                return true
-            }
-
-            override fun onQueryTextChange(query: String?): Boolean {
-                //TODO if needs to update list on each entered symbol
-                return true
-            }
-        })
-        return true
-    }
 }
+
+/*override fun onCreateOptionsMenu(menu: Menu): Boolean {
+    /*meInflater.inflate(R.menu.search_menu, menu)
+    val searchManager =
+        getSystemService(Context.SEARCH_SERVICE) as SearchManager
+    val searchView =
+        menu.findItem(R.id.app_bar_search).actionView as SearchView
+    searchView.setSearchableInfo(searchManager.getSearchableInfo(componentName))
+
+    searchView.isIconifiedByDefault = false
+
+    searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+        override fun onQueryTextSubmit(query: String?): Boolean {
+            if (query.isNullOrEmpty()) return true
+            val navigationController = findNavController(R.id.container)
+            val bundle = Bundle()
+            bundle.putString("search_query", query)
+            navigationController.setGraph(navigationController.graph, bundle)
+            return true
+        }
+
+        override fun onQueryTextChange(query: String?): Boolean {
+            //TODO if needs to update list on each entered symbol
+            return true
+        }
+    })
+    return true
+}
+}*/
