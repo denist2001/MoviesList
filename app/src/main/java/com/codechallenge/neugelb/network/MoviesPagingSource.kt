@@ -8,6 +8,9 @@ class MoviesPagingSource @Inject constructor(
     private val repository: Repository,
     private val searchQuery: String?
 ) : PagingSource<Int, Result>() {
+
+    private val GITHUB_STARTING_PAGE_INDEX = 1
+
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, Result> {
         try {
             val pageNumber = params.key ?: 1
@@ -21,8 +24,8 @@ class MoviesPagingSource @Inject constructor(
 
             return LoadResult.Page(
                 data = response.results,
-                prevKey = response.page - 1,
-                nextKey = response.page + 1
+                prevKey = if (pageNumber == GITHUB_STARTING_PAGE_INDEX) null else pageNumber - 1,
+                nextKey = if (response.results.isEmpty()) null else pageNumber + 1
             )
         } catch (e: Exception) {
             return LoadResult.Error(e)

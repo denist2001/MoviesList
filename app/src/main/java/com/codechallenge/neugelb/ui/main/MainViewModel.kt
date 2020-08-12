@@ -1,7 +1,6 @@
 package com.codechallenge.neugelb.ui.main
 
 import androidx.hilt.lifecycle.ViewModelInject
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.*
@@ -17,26 +16,30 @@ class MainViewModel @ViewModelInject constructor(
     private val converter: ResultConverter
 ) : ViewModel() {
 
-    var previousSearch = ""
-    var loadingFlow: Flow<PagingData<ShortPresentations>>? = Pager(PagingConfig(20)) {
-        MoviesPagingSource(repository, "")
-    }
-        .flow
-        .map { pagingData: PagingData<Result> ->
-            pagingData.map { result: Result ->
-                converter.transform(result)
-            }
-        }
-        .cachedIn(viewModelScope)
-    fun searchingFlow(searchQuery: String): Flow<PagingData<ShortPresentations>>? {
-        return Pager(PagingConfig(20)) {
-            MoviesPagingSource(repository, searchQuery)
-        }.flow
+    var searchQuery = ""
+
+    var loadingFlow: Flow<PagingData<ShortPresentations>>? =
+        Pager(
+            config = PagingConfig(20, enablePlaceholders = true),
+            pagingSourceFactory = { MoviesPagingSource(repository, "") }
+        )
+            .flow
             .map { pagingData: PagingData<Result> ->
                 pagingData.map { result: Result ->
                     converter.transform(result)
                 }
             }
             .cachedIn(viewModelScope)
-    }
+
+    fun searchingFlow(searchQuery: String): Flow<PagingData<ShortPresentations>>? =
+        Pager(
+            PagingConfig(20, enablePlaceholders = true),
+            pagingSourceFactory = { MoviesPagingSource(repository, searchQuery) }
+        ).flow
+            .map { pagingData: PagingData<Result> ->
+                pagingData.map { result: Result ->
+                    converter.transform(result)
+                }
+            }
+            .cachedIn(viewModelScope)
 }

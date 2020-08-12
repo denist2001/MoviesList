@@ -8,6 +8,7 @@ import android.widget.RatingBar
 import android.widget.TextView
 import androidx.navigation.NavDirections
 import androidx.navigation.findNavController
+import androidx.paging.DataSource
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
@@ -56,6 +57,10 @@ class MainAdapter @Inject constructor() :
             placeholder(R.drawable.ic_baseline_local_movies_24)
             transformations(RoundedCornersTransformation(8F))
         }
+    }
+
+    fun cleanData() {
+
     }
 
     class MainViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
