@@ -15,9 +15,9 @@
             app:destination="@id/details_fragment"
             app:enterAnim="@android:anim/fade_in"
             app:exitAnim="@android:anim/fade_out" />
-        <argument
-            android:name="search_query"
-            app:argType="string" />
+        <action
+            android:id="@+id/action_mainFragment_to_searchFragment"
+            app:destination="@id/searchFragment" />
     </fragment>
 
     <fragment
@@ -41,6 +41,18 @@
             android:name="rating"
             app:argType="float"
             android:defaultValue="0.0" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/searchFragment"
+        android:name="com.codechallenge.neugelb.ui.search.SearchFragment"
+        android:label="SearchFragment" >
+        <action
+            android:id="@+id/action_searchFragment_to_details_fragment"
+            app:destination="@id/details_fragment" />
+        <argument
+            android:name="search_query"
+            app:argType="string" />
     </fragment>
 
 

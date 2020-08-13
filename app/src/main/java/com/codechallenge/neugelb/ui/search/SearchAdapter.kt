@@ -1,4 +1,4 @@
-package com.codechallenge.neugelb.ui.main
+package com.codechallenge.neugelb.ui.search
 
 import android.view.LayoutInflater
 import android.view.View
@@ -7,38 +7,36 @@ import android.widget.ImageView
 import android.widget.RatingBar
 import android.widget.TextView
 import androidx.navigation.NavDirections
-import androidx.navigation.findNavController
-import androidx.paging.DataSource
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
-import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import coil.api.load
 import coil.size.Scale
 import coil.transform.RoundedCornersTransformation
 import com.codechallenge.neugelb.BuildConfig
 import com.codechallenge.neugelb.R
+import com.codechallenge.neugelb.ui.main.ShortPresentations
 import io.reactivex.subjects.PublishSubject
 import javax.inject.Inject
 
-class MainAdapter @Inject constructor() :
-    PagingDataAdapter<ShortPresentations, MainAdapter.MainViewHolder>(DiffCallback()) {
+class SearchAdapter @Inject constructor() :
+    PagingDataAdapter<ShortPresentations, SearchAdapter.SearchViewHolder>(DiffCallback()) {
 
     val clickSubject: PublishSubject<NavDirections> = PublishSubject.create<NavDirections>()
 
     private val imagesDomain = BuildConfig.SMALL_IMAGES_DOMAIN
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MainViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SearchViewHolder {
         val view =
             LayoutInflater.from(parent.context).inflate(R.layout.presentation_item, parent, false)
-        return MainViewHolder(view)
+        return SearchViewHolder(view)
     }
 
-    override fun onBindViewHolder(holder: MainViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: SearchViewHolder, position: Int) {
         holder.itemView.setOnClickListener {
             val presentation =
                 getItem(position) ?: return@setOnClickListener
-            val action = MainFragmentDirections.actionShowSelectedMovie(
+            val action = SearchFragmentDirections.actionSearchFragmentToDetailsFragment(
                 title = presentation.title,
                 imageUrl = presentation.imageUrl,
                 description = presentation.description,
@@ -59,7 +57,7 @@ class MainAdapter @Inject constructor() :
         }
     }
 
-    class MainViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    class SearchViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val posterView: ImageView = itemView.findViewById(R.id.poster_iv)
         val title: TextView = itemView.findViewById(R.id.title_tv)
         val ratingBar: RatingBar = itemView.findViewById(R.id.ratingBar)

@@ -1,4 +1,4 @@
-package com.codechallenge.neugelb.ui.main
+package com.codechallenge.neugelb.ui.search
 
 import android.os.Bundle
 import android.view.Menu
@@ -21,32 +21,34 @@ import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class MainFragment : Fragment(R.layout.main_fragment), LifecycleOwner {
+class SearchFragment : Fragment(R.layout.main_fragment), LifecycleOwner {
 
     @Inject
-    lateinit var mainAdapter: MainAdapter
-    private val viewModel by viewModels<MainViewModel>()
+    lateinit var searchAdapter: SearchAdapter
+    private val viewModel by viewModels<SearchViewModel>()
     private val disposables = CompositeDisposable()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        val searchQuery = requireArguments().getString("search_query", "")
         view.isFocusableInTouchMode = true
         view.requestFocus()
-        setHasOptionsMenu(true)
         with(allMovies_rv) {
-            adapter = mainAdapter
+            adapter = searchAdapter
             layoutManager = LinearLayoutManager(context)
             setHasFixedSize(true) //TODO ?
         }
-        disposables.add(mainAdapter.clickSubject
+        disposables.add(searchAdapter.clickSubject
             .throttleFirst(1, TimeUnit.SECONDS)
             .subscribe {
                 findNavController().navigate(it)
             })
-        startLoadingMovies()
+        if (searchQuery.isNotEmpty()) {
+            startSearchingMovies(searchQuery)
+        }
     }
 
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+    /*override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         menu.clear()
         inflater.inflate(R.menu.search_menu, menu)
         val searchView = menu.findItem(R.id.app_bar_search).actionView as SearchView
@@ -56,10 +58,11 @@ class MainFragment : Fragment(R.layout.main_fragment), LifecycleOwner {
         searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
                 if (!query.isNullOrEmpty()) {
-                    val action = MainFragmentDirections.actionMainFragmentToSearchFragment(
-                        searchQuery = query
-                    )
-                    findNavController().navigate(action)
+                    viewModel.searchQuery = query
+                    startSearchingMovies(query)
+                } else {
+                    viewModel.searchQuery = ""
+                    startLoadingMovies()
                 }
                 return true
             }
@@ -69,17 +72,17 @@ class MainFragment : Fragment(R.layout.main_fragment), LifecycleOwner {
                 return true
             }
         })
-    }
+    }*/
 
     override fun onDestroyView() {
         super.onDestroyView()
         disposables.clear()
     }
 
-    private fun startLoadingMovies() {
+    private fun startSearchingMovies(query: String) {
         viewLifecycleOwner.lifecycleScope.launch {
-            viewModel.loadingFlow?.collectLatest { pagingData ->
-                mainAdapter.submitData(pagingData)
+            viewModel.searchingFlow(query)?.collectLatest { pagingData ->
+                searchAdapter.submitData(pagingData)
             }
         }
     }
